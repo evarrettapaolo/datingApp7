@@ -12,6 +12,7 @@ namespace API.Extensions
       {
         options.UseSqlite(config.GetConnectionString("DefaultConnection"));
       });
+
       services.AddCors(options =>
       {
         options.AddPolicy(name: "MyCors", policy =>
@@ -21,6 +22,7 @@ namespace API.Extensions
           .WithOrigins("https://localhost:4200");
         });
       });
+      
       services.AddScoped<ITokenService, TokenService>();
 
       return services;
