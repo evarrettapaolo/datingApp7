@@ -1,4 +1,82 @@
 /* You can add global styles to this file, and also import other style files */
+
 body {
   background-color: lightseagreen;
 }
+
+/* tabset css */
+/* .tab-panel {
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.nav-tabs > li.open, .member-tabset > .nav-tabs > li:hover {
+  border-bottom: 4px solid gray;
+}
+
+.member-tabset > .nav-tabs > li.open > a, .member-tabset > .nav-tabs > li:hover > a {
+  border: 0;
+  background: none !important;
+  color: #333333;
+}
+
+.member-tabset > .nav-tabs > li.open > a > i, .member-tabset > .nav-tabs > li:hover > a > i {
+  color: #a6a6a6;
+}
+
+.member-tabset > .nav-tabs > li.open .dropdown-menu, .member-tabset > .nav-tabs > li:hover .dropdown-menu {
+  margin-top: 0px;
+}
+
+.member-tabset > .nav-tabs > li.active {
+  border-bottom: 4px solid black;
+  position: relative;
+}
+
+.member-tabset > .nav-tabs > li.active > a {
+  border: 0 !important;
+  color: black;
+}
+
+.member-tabset > .nav-tabs > li.active > a > i {
+  color: black;
+}
+
+.member-tabset > .tab-content {
+  margin-top: -3px;
+  background-color: none;
+  border: 0;
+  padding: 15px 0;
+} */
+
+/* tabset */
+tabset .nav-link {
+  color: black;
+  border: none;
+  border-bottom: black;
+}
+
+tabset .nav-link.active {
+  box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.343);
+}
+
+tabset .nav-link .active span {
+  background-color: red;
+  padding: 0;
+}
+
+tabset .nav-link:not( :hover ) {
+  border: none;
+}
+
+tabset .nav-link:hover {
+  color: black;
+  border: none;
+}
+
+/* gallery */
+.gallery{
+}
+
+

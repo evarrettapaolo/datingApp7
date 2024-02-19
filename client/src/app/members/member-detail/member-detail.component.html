@@ -1,1 +1,64 @@
-<p>member-detail works!</p>
+<div class="container">
+  <div class="row" *ngIf="member">
+    <div class="col-4">
+
+      <!-- card -->
+      <div class="card">
+        <!-- image -->
+        <img src="{{member.photoUrl || './assets/user.png'}}" alt="{{member.knownAs}}"
+          class="card-img-top img-thumbnail d-block mx-auto shadow my-4 mt-lg-5 mb-lg-4">
+        <!-- card body -->
+        <div class="card-body">
+          <!-- member details -->
+          <div>
+            <strong>Location:</strong>
+            <p>{{member.city}}, {{member.country}}</p>
+          </div>
+          <div>
+            <strong>Age:</strong>
+            <p>{{member.age}}</p>
+          </div>
+          <div>
+            <strong>Last Active:</strong>
+            <p>{{member.lastActive| date}}</p>
+          </div>
+          <div>
+            <strong>Member since:</strong>
+            <p>{{member.created | date}}</p>
+          </div>
+        </div>
+        <div class="card-footer ">
+          <div class="btn-group d-flex">
+            <button class="btn btn-secondary w-50">Like</button>
+            <button class="btn btn-secondary w-50">Message</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- right side tabset -->
+    <div class="col-8">
+      <!-- tabset component -->
+      <tabset class="member-tabset">
+        <!-- tabs -->
+        <tab heading="About {{member.knownAs}}" class="tab-heading">
+          <h4 class="text-dark">Description</h4>
+          <p>{{member.introduction}}</p>
+          <h4 class="text-dark">Looking for</h4>
+          <p>{{member.lookingFor}}</p>
+        </tab>
+        <tab heading="Interests">
+          <h4 class="text-dark">Interests</h4>
+          <p>{{member.interests}}</p>
+        </tab>
+        <tab heading="Photos" #photoTab="tab">
+          <gallery *ngIf="photoTab.active" [items]="images" class="gallery"></gallery>
+        </tab>
+        <tab heading="Messages">
+          <p>Messages will go here</p>
+        </tab>
+      </tabset>
+    </div>
+
+  </div>
+</div>
