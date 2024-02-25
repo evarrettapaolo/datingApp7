@@ -7,6 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
+  /// <summary>
+  /// Authentication controller
+  /// </summary>
   public class AccountController : BaseApiController
   {
     private readonly DataContext _context;
@@ -49,7 +52,9 @@ namespace API.Controllers
     public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
     {
       //Find username in Db
-      var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == loginDto.Username);
+      var user = await _context.Users
+        .Include(p => p.Photos) //required to access the main photo url value
+        .SingleOrDefaultAsync(x => x.UserName == loginDto.Username);
 
       //Check if we found one
       if (user == null) return Unauthorized("invalid username");
@@ -70,7 +75,8 @@ namespace API.Controllers
       return new UserDto()
       {
         Username = user.UserName,
-        Token = _tokenService.CreateToken(user)
+        Token = _tokenService.CreateToken(user),
+        PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url
       };
     }
 
