@@ -1,5 +1,5 @@
 using API.DTOs;
-using AutoMapper.Execution;
+using API.Helpers;
 
 namespace API.Interfaces
 {
@@ -11,7 +11,7 @@ namespace API.Interfaces
     Task<AppUser> GetUserByIdAsync(int id);
     Task<AppUser> GetUserByUsernameAsync(string username);
     //Optimized for member data gathering
-    Task<IEnumerable<MemberDto>> GetMembersAsync();
+    Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams); //Paging List
     Task<MemberDto> GetMemberAsync(string username);
   }
 }

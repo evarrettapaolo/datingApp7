@@ -2,6 +2,7 @@
 using API.DTOs;
 using API.Entities;
 using API.Extensions;
+using API.Helpers;
 using API.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -27,9 +28,21 @@ public class UsersController : BaseApiController
   }
 
   [HttpGet]
-  public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers()
+  public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers([FromQuery] UserParams userParams)
   {
-    return Ok(await _userRepository.GetMembersAsync());
+    //utilize the repo and principal claim classes
+    var currentUser = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
+    userParams.CurrentUsername = currentUser.UserName;
+    //default gender filtering 
+    if (string.IsNullOrEmpty(userParams.Gender))
+    {
+      userParams.Gender = currentUser.Gender == "male" ? "female" : "male";
+    }
+    var users = await _userRepository.GetMembersAsync(userParams);
+    //populate the custom made response headers
+    Response.AddPaginationHeader(new PaginationHeader(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages));
+    //return the list as response
+    return Ok(users);
   }
 
   [HttpGet("{username}")]
@@ -61,12 +74,12 @@ public class UsersController : BaseApiController
     //gather the user object
     var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
 
-    if(user == null) return NotFound(); //no object
+    if (user == null) return NotFound(); //no object
 
     //upload to cloudinary, store image
-    var result = await _photoService.AddPhotoAsync(file); 
+    var result = await _photoService.AddPhotoAsync(file);
 
-    if(result.Error != null) return BadRequest(result.Error.Message); //failed upload
+    if (result.Error != null) return BadRequest(result.Error.Message); //failed upload
 
     //object to append in the User photos array
     var photo = new Photo
@@ -75,14 +88,14 @@ public class UsersController : BaseApiController
       PublicId = result.PublicId
     };
 
-    if(user.Photos.Count == 0) photo.IsMain = true; //set main if it is first photo
+    if (user.Photos.Count == 0) photo.IsMain = true; //set main if it is first photo
 
     user.Photos.Add(photo); //append
 
-    if(await _userRepository.SaveAllAsync()) 
+    if (await _userRepository.SaveAllAsync())
     {
       //return a 201 - created, with a photoDto object returned
-      return CreatedAtAction(nameof(GetUser), new {username = user.UserName}, _mapper.Map<PhotoDto>(photo));
+      return CreatedAtAction(nameof(GetUser), new { username = user.UserName }, _mapper.Map<PhotoDto>(photo));
     }
 
     return BadRequest("Problem adding photo"); //
@@ -94,23 +107,23 @@ public class UsersController : BaseApiController
     //get current user
     var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
 
-    if(user == null) return NotFound(); //user not found
+    if (user == null) return NotFound(); //user not found
 
     //get the matching photo based on id
     var photo = user.Photos.FirstOrDefault(x => x.Id == photoId);
 
-    if(photo == null) return NotFound(); //photo not found
+    if (photo == null) return NotFound(); //photo not found
 
-    if(photo.IsMain) return BadRequest("this is already you main photo"); //already main
+    if (photo.IsMain) return BadRequest("this is already you main photo"); //already main
 
     //get the current photo
     var currentMain = user.Photos.FirstOrDefault(x => x.IsMain);
 
-    if(currentMain != null) currentMain.IsMain = false; //set the current main to false
+    if (currentMain != null) currentMain.IsMain = false; //set the current main to false
 
     photo.IsMain = true; //set the new matched photo to true
 
-    if(await _userRepository.SaveAllAsync()) return NoContent(); //save db
+    if (await _userRepository.SaveAllAsync()) return NoContent(); //save db
 
     return BadRequest("Problem setting the main photo");
   }
@@ -123,19 +136,19 @@ public class UsersController : BaseApiController
 
     var photo = user.Photos.FirstOrDefault(x => x.Id == photoId);  //store matching photo
 
-    if(photo == null) return NotFound(); //photo not found
+    if (photo == null) return NotFound(); //photo not found
 
-    if(photo.IsMain) return BadRequest("You cannot delete your main photo");
+    if (photo.IsMain) return BadRequest("You cannot delete your main photo");
 
-    if(photo.PublicId != null) //delete attempt with exception handling
+    if (photo.PublicId != null) //delete attempt with exception handling
     {
       var result = await _photoService.DeletePhotoAsync(photo.PublicId);
-      if(result.Error != null) return BadRequest(result.Error.Message);
+      if (result.Error != null) return BadRequest(result.Error.Message);
     }
 
     user.Photos.Remove(photo); //delete from repo object
-    
-    if(await _userRepository.SaveAllAsync()) return Ok(); //apply changes in repo
+
+    if (await _userRepository.SaveAllAsync()) return Ok(); //apply changes in repo
 
     return BadRequest("Problem deleting photo");
   }

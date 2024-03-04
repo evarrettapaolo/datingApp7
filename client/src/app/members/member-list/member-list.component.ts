@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, take } from 'rxjs';
 import { Member } from 'src/app/_models/member';
+import { Pagination } from 'src/app/_models/pagination';
+import { User } from 'src/app/_models/user';
+import { UserParams } from 'src/app/_models/userParams';
+import { AccountService } from 'src/app/_services/account.service';
 import { MembersService } from 'src/app/_services/members.service';
 
 @Component({
@@ -9,12 +13,47 @@ import { MembersService } from 'src/app/_services/members.service';
   styleUrls: ['./member-list.component.css']
 })
 export class MemberListComponent implements OnInit {
-  members$: Observable<Member[]> | undefined;
+  members: Member[] | undefined;
+  pagination: Pagination | undefined;
+  userParams: UserParams | undefined;
+  genderList = [{ value: 'male', display: 'Males' }, { value: 'female', display: 'Females' }]
 
-  constructor(private memberService: MembersService) {}
-  ngOnInit(): void {
-    this.members$ = this.memberService.getMembers();
+  constructor(private memberService: MembersService) {
+    //copy the state of the memberService property
+    this.userParams = memberService.getUserParams();  
   }
 
+  ngOnInit(): void {
+    this.loadMembers();
+  }
+
+  loadMembers() {
+    if (this.userParams) {
+      this.memberService.setUserParams(this.userParams); //set memberService property
+      this.memberService.getMembers(this.userParams).subscribe({
+        next: response => {
+          if (response.result && response.pagination) {
+            this.members = response.result;
+            this.pagination = response.pagination;
+          }
+        }
+      })
+    }
+  }
+
+  resetFilters() {
+    //reset the memberService property
+    this.userParams = this.memberService.resetUserParams(); 
+    this.loadMembers();
+  }
+
+  pageChanged(event: any) {
+    //check to make sure event.page is updated
+    if (this.userParams && this.userParams?.pageNumber !== event.page) {
+      this.userParams.pageNumber = event.page; //update the pageNumber local property
+      this.memberService.setUserParams(this.userParams); //update the memberService property
+      this.loadMembers(); //reload, create a new request
+    }
+  }
 
 }

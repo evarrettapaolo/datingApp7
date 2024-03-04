@@ -1,13 +1,15 @@
 <div class="pb-3">
   <div class="row" *ngIf="member">
-
     <!-- top tags -->
     <div class="col-4">
       <h1 class="text-dark">Your profile</h1>
     </div>
     <div class="col-8">
       <div class="alert alert-info pb-0" *ngIf="editForm.dirty">
-        <p><strong>Information: </strong>You have made changes. Any unsaved changes will be lost</p>
+        <p>
+          <strong>Information: </strong>You have made changes. Any unsaved
+          changes will be lost
+        </p>
       </div>
     </div>
 
@@ -15,30 +17,41 @@
     <div class="col-4">
       <div class="card bg-secondary">
         <!-- image -->
-        <img src="{{member.photoUrl || './assets/user.png'}}" alt="{{member.knownAs}}"
-          class="card-img-top img-thumbnail d-block mx-auto shadow my-4 mt-lg-5 mb-lg-4 w-75">
+        <img
+          src="{{ member.photoUrl || './assets/user.png' }}"
+          alt="{{ member.knownAs }}"
+          class="card-img-top img-thumbnail d-block mx-auto shadow my-4 mt-lg-5 mb-lg-4 w-75"
+        />
         <!-- card body -->
         <div class="card-body">
           <!-- member details -->
           <div>
             <strong>Location:</strong>
-            <p>{{member.city}}, {{member.country}}</p>
+            <p>{{ member.city }}, {{ member.country }}</p>
           </div>
           <div>
             <strong>Age:</strong>
-            <p>{{member.age}}</p>
+            <p>{{ member.age }}</p>
           </div>
           <div>
             <strong>Last Active:</strong>
-            <p>{{member.lastActive| date}}</p>
+                <!-- converted into UTC -->
+            <p>{{ member.lastActive + 'Z' | timeago }}</p> 
           </div>
           <div>
             <strong>Member since:</strong>
-            <p>{{member.created | date}}</p>
+            <p>{{ member.created | date : "dd MMM yyyy" }}</p>
           </div>
         </div>
         <div class="card-footer bg-secondary">
-          <button [disabled]="!editForm.dirty" type="submit" form="editForm" class="btn btn-success w-100"  >Save changes</button>
+          <button
+            [disabled]="!editForm.dirty"
+            type="submit"
+            form="editForm"
+            class="btn btn-success w-100"
+          >
+            Save changes
+          </button>
         </div>
       </div>
     </div>
@@ -48,33 +61,50 @@
       <!-- tabset component -->
       <tabset class="member-tabset">
         <!-- About member tab -->
-        <tab heading="About {{member.knownAs}}" class="tab-heading mt-2">
+        <tab heading="About {{ member.knownAs }}" class="tab-heading mt-2">
           <!-- edit form -->
           <form #editForm="ngForm" id="editForm" (ngSubmit)="updateMember()">
             <!-- description -->
             <h4 class="text-dark mt-2">Description</h4>
-            <textarea class="form-control" [(ngModel)]="member.introduction" name="introduction" rows="6"></textarea>
+            <textarea
+              class="form-control"
+              [(ngModel)]="member.introduction"
+              name="introduction"
+              rows="6"
+            ></textarea>
             <!-- lookingfor -->
             <h4 class="text-dark mt-2">Looking for</h4>
-            <textarea class="form-control" [(ngModel)]="member.lookingFor" name="lookingFor" rows="6"></textarea>
+            <textarea
+              class="form-control"
+              [(ngModel)]="member.lookingFor"
+              name="lookingFor"
+              rows="6"
+            ></textarea>
             <!-- interests -->
             <h4 class="text-dark mt-2">Interests</h4>
-            <textarea class="form-control" [(ngModel)]="member.interests" name="interests" rows="6"></textarea>
+            <textarea
+              class="form-control"
+              [(ngModel)]="member.interests"
+              name="interests"
+              rows="6"
+            ></textarea>
             <!-- location -->
-            <h4 class="text-dark mt-2">Location Details: </h4>
+            <h4 class="text-dark mt-2">Location Details:</h4>
             <div class="d-flex flex-row align-items-center">
               <label for="city" class="pe-1">City: </label>
-              <input 
-                type="text" 
-                [(ngModel)]="member.city" 
-                name="city" 
-                class="form-control mx-2">
+              <input
+                type="text"
+                [(ngModel)]="member.city"
+                name="city"
+                class="form-control mx-2"
+              />
               <label for="country" class="fpe-1">Country: </label>
-              <input 
-                type="text" 
-                [(ngModel)]="member.country" 
-                name="country" 
-                class="form-control mx-2">
+              <input
+                type="text"
+                [(ngModel)]="member.country"
+                name="country"
+                class="form-control mx-2"
+              />
             </div>
           </form>
         </tab>
@@ -84,6 +114,5 @@
         </tab>
       </tabset>
     </div>
-
   </div>
 </div>

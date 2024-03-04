@@ -1,33 +1,36 @@
 <div class="container">
   <div class="row" *ngIf="member">
     <div class="col-4">
-
       <!-- card -->
       <div class="card">
         <!-- image -->
-        <img src="{{member.photoUrl || './assets/user.png'}}" alt="{{member.knownAs}}"
-          class="card-img-top img-thumbnail d-block mx-auto shadow my-4 mt-lg-5 mb-lg-4">
+        <img
+          src="{{ member.photoUrl || './assets/user.png' }}"
+          alt="{{ member.knownAs }}"
+          class="card-img-top img-thumbnail d-block mx-auto shadow my-4 mt-lg-5 mb-lg-4"
+        />
         <!-- card body -->
         <div class="card-body">
           <!-- member details -->
           <div>
             <strong>Location:</strong>
-            <p>{{member.city}}, {{member.country}}</p>
+            <p>{{ member.city }}, {{ member.country }}</p>
           </div>
           <div>
             <strong>Age:</strong>
-            <p>{{member.age}}</p>
+            <p>{{ member.age }}</p>
           </div>
           <div>
             <strong>Last Active:</strong>
-            <p>{{member.lastActive| date}}</p>
+                <!-- converted to UTC -->
+            <p>{{ member.lastActive + 'Z' | timeago }}</p>
           </div>
           <div>
             <strong>Member since:</strong>
-            <p>{{member.created | date}}</p>
+            <p>{{ member.created | date: 'dd MMM yyyy' }}</p>
           </div>
         </div>
-        <div class="card-footer ">
+        <div class="card-footer">
           <div class="btn-group d-flex">
             <button class="btn btn-secondary w-50">Like</button>
             <button class="btn btn-secondary w-50">Message</button>
@@ -41,25 +44,28 @@
       <!-- tabset component -->
       <tabset class="member-tabset">
         <!-- tabs -->
-        <tab heading="About {{member.knownAs}}" class="tab-heading mt-2">
+        <tab heading="About {{ member.knownAs }}" class="tab-heading mt-2">
           <h4 class="text-dark">Description</h4>
-          <p>{{member.introduction}}</p>
+          <p>{{ member.introduction }}</p>
           <h4 class="text-dark">Looking for</h4>
-          <p>{{member.lookingFor}}</p>
+          <p>{{ member.lookingFor }}</p>
         </tab>
         <tab heading="Interests" class="mt-2">
           <h4 class="text-dark">Interests</h4>
-          <p>{{member.interests}}</p>
+          <p>{{ member.interests }}</p>
         </tab>
         <!-- execute gallery component when tab is active -->
-        <tab heading="Photos" #photoTab="tab" class="mt-2"> 
-          <gallery *ngIf="photoTab.active" [items]="images" class="gallery"></gallery>
+        <tab heading="Photos" #photoTab="tab" class="mt-2">
+          <gallery
+            *ngIf="photoTab.active"
+            [items]="images"
+            class="gallery"
+          ></gallery>
         </tab>
         <tab heading="Messages" class="mt-2">
           <p>Messages will go here</p>
         </tab>
       </tabset>
     </div>
-
   </div>
 </div>
