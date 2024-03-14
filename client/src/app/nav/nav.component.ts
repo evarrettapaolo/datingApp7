@@ -3,6 +3,9 @@ import { AccountService } from '../_services/account.service';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { MembersService } from '../_services/members.service';
+import { UserParams } from '../_models/userParams';
+import { Member } from '../_models/member';
 
 @Component({
   selector: 'app-nav',
@@ -11,8 +14,11 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class NavComponent implements OnInit {
   model: any = {};
+  userParams: UserParams | undefined; //used to clear request params after logout, not working yet
 
-  constructor(public accountService: AccountService, private router: Router, private toastr: ToastrService) { }
+
+  constructor(public accountService: AccountService, private router: Router, private toastr: ToastrService) {
+  }
 
   ngOnInit(): void {
   }
@@ -31,6 +37,7 @@ export class NavComponent implements OnInit {
 
   logout() {
     this.accountService.logout();
+    // this.userParams = this.memberService.resetUserParams(); 
     this.router.navigateByUrl('/');
   }
 

@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { User } from '../_models/user';
 import { BehaviorSubject, map } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
+import { MembersService } from './members.service';
+import { UserParams } from '../_models/userParams';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +14,7 @@ export class AccountService {
   private currentUserSource = new BehaviorSubject<User | null>(null); //initially null
   currentUser$ = this.currentUserSource.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   //account login 
   login(model: any) {

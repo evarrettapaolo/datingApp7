@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using API.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace API;
 
@@ -9,5 +10,31 @@ public class DataContext : DbContext
   }
 
   public DbSet<AppUser> Users { get; set; }
-  
+  public DbSet<UserLike> Likes { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+      base.OnModelCreating(modelBuilder);
+
+      //primary key
+      modelBuilder.Entity<UserLike>()
+        .HasKey(k => new {k.SourceUserId, k.TargetUserId});
+
+      //relation
+      //current user can like other users
+      modelBuilder.Entity<UserLike>()
+        .HasOne(s => s.SourceUser)
+        .WithMany(l => l.LikedUsers)
+        .HasForeignKey(s => s.SourceUserId)
+        .OnDelete(DeleteBehavior.Cascade);
+
+      //current user liked by other users
+      modelBuilder.Entity<UserLike>()
+        .HasOne(s => s.TargetUser)
+        .WithMany(l => l.LikedByUsers)
+        .HasForeignKey(s => s.TargetUserId)
+        .OnDelete(DeleteBehavior.Cascade);
+
+    }
+
 }

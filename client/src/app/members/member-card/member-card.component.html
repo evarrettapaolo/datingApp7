@@ -1,4 +1,4 @@
-<div class="card mb-4" style="min-width: 120px;" *ngIf="member">
+<div class="card mb-4" style="min-width: 150px;" *ngIf="member">
   <div class="card-img-wrapper">
     <!-- card image -->
     <img src="{{member.photoUrl || './assets/user.png'}}" alt="{{member.knownAs}}" class="card-img-top">
@@ -8,7 +8,7 @@
         <button class="btn btn-secondary" routerLink="/members/{{member.userName}}"><i class="fa fa-user"></i></button>
       </li>
       <li class="list-inline-item">
-        <button class="btn btn-secondary"><i class="fa fa-heart"></i></button>
+        <button class="btn btn-secondary" (click)="addLike(member)"><i class="fa fa-heart"></i></button>
       </li>
       <li class="list-inline-item">
         <button class="btn btn-secondary"><i class="fa fa-envelope"></i></button>

@@ -20,7 +20,7 @@ import { TimeagoModule } from "ngx-timeago";
     }),
     TabsModule.forRoot(),
     NgxSpinnerModule.forRoot({
-      type: 'ball-newton-cradle'
+      type: 'cube-transition'
     }),
     FileUploadModule,
     BsDatepickerModule.forRoot(),

@@ -21,6 +21,8 @@ public class AppUser
   public string City { get; set; }
   public string Country { get; set; }
   public List<Photo> Photos { get; set; } = new();
+  public List<UserLike> LikedByUsers { get; set; } // one to many relation
+  public List<UserLike> LikedUsers { get; set; }   //many to one relation
 
   //Inefficient, results longer query
   // public int GetAge()
