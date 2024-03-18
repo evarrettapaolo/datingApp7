@@ -1,0 +1,67 @@
+<div class="card">
+  <!-- body -->
+  <div class="card-body">
+    <!-- no message prompt -->
+    <div *ngIf="messages.length === 0">
+      No messages yet... say hi by using the message box below
+    </div>
+    <!-- message thread -->
+    <ul *ngIf="messages.length > 0" class="chat">
+      <li *ngFor="let message of messages">
+        <div>
+          <!-- user image -->
+          <span class="chat-image float-end">
+            <img
+              src="{{ message.senderPhotoUrl || './assets/user.png' }}"
+              alt="image of user"
+              class="rounded-circle"
+            />
+          </span>
+          <!-- message row/body -->
+          <div class="chat-body">
+            <div class="header">
+              <small class="text-muted">
+                <span class="fa fa-clock-o">
+                  {{ message.messageSent + 'Z' | timeago }}
+                </span>
+                <!-- not read notification -->
+                <span
+                  class="text-danger"
+                  *ngIf="
+                    !message.dateRead && message.senderUsername !== username
+                  "
+                  > (unread)
+                </span>
+                <!-- read notification -->
+                <span
+                  class="text-success"
+                  *ngIf="message.dateRead && message.senderUsername !== username"
+                >
+                  (read {{ message.dateRead + 'Z' | timeago }})
+                </span>
+              </small>
+            </div>
+            <!-- message text -->
+            <p class="text-dark">{{ message.content }}</p>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <!-- footer -->
+  <div class="card-footer">
+    <form #messageForm="ngForm" (ngSubmit)="sendMessage()" autocomplete="off">
+      <div class="input-group">
+        <input
+          name="messageContent"
+          required
+          [(ngModel)]="messageContent"
+          type="text"
+          class="form-control input-sm"
+          placeholder="Send a private message"
+        />
+        <button [disabled]="!messageForm.valid" class="btn btn-primary" type="submit">Send</button>
+      </div>
+    </form>
+  </div>
+</div>

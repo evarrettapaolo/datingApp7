@@ -23,10 +23,6 @@ public class AppUser
   public List<Photo> Photos { get; set; } = new();
   public List<UserLike> LikedByUsers { get; set; } // one to many relation
   public List<UserLike> LikedUsers { get; set; }   //many to one relation
-
-  //Inefficient, results longer query
-  // public int GetAge()
-  // {
-  //   return DateOfBirth.CalculateAge();
-  // }
+  public List<Message> MessagesSent { get; set; }
+  public List<Message> MessagesReceived { get; set; }
 }
