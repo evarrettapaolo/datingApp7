@@ -1,7 +1,9 @@
 using API;
 using API.Data;
+using API.Entities;
 using API.Extensions;
 using API.Middleware;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,8 +36,10 @@ var services = scope.ServiceProvider; //gather
 try
 {
   var context = services.GetRequiredService<DataContext>(); //for exception handling and db insertion
+  var userManager = services.GetRequiredService<UserManager<AppUser>>();
+  var roleManager = services.GetRequiredService<RoleManager<AppRole>>();
   await context.Database.MigrateAsync(); //create migration by code if not db yet
-  await Seed.SeedUsers(context); //call the Seed static method to insert entries 
+  await Seed.SeedUsers(userManager, roleManager); 
 }
 catch (Exception ex)
 {

@@ -27,6 +27,7 @@ public class UsersController : BaseApiController
     _userRepository = userRepository;
   }
 
+  // [Authorize(Roles = "Admin")] //for testing
   [HttpGet]
   public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers([FromQuery] UserParams userParams)
   {
@@ -45,6 +46,7 @@ public class UsersController : BaseApiController
     return Ok(users);
   }
 
+  // [Authorize(Roles = "Member")] //for testing
   [HttpGet("{username}")]
   public async Task<ActionResult<MemberDto>> GetUser(string username)
   {
