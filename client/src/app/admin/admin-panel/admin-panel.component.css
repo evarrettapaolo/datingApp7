@@ -1,0 +1,23 @@
+tabset .nav-link {
+  color: red;
+  border: none;
+  border-bottom: black;
+}
+
+tabset .nav-link.active {
+  box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.343);
+}
+
+tabset .nav-link .active span {
+  background-color: red;
+  padding: 0;
+}
+
+tabset .nav-link:not( :hover ) {
+  border: none;
+}
+
+tabset .nav-link:hover {
+  color: black;
+  border: none;
+}

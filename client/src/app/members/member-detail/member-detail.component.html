@@ -11,7 +11,14 @@
         />
         <!-- card body -->
         <div class="card-body">
-          <!-- member details -->
+          <!-- online indicator -->
+          <div
+          class="mb-2"
+          *ngIf="(presenceService.onlineUsers$ | async)?.includes(member.userName)"
+          >
+            <i class="fa fa-user-circle text-success"></i> Online now
+          </div>
+        <!-- member details -->
           <div>
             <strong>Location:</strong>
             <p>{{ member.city }}, {{ member.country }}</p>
@@ -22,18 +29,23 @@
           </div>
           <div>
             <strong>Last Active:</strong>
-                <!-- converted to UTC -->
-            <p>{{ member.lastActive + 'Z' | timeago }}</p>
+            <!-- converted to UTC -->
+            <p>{{ member.lastActive | timeago }}</p>
           </div>
           <div>
             <strong>Member since:</strong>
-            <p>{{ member.created | date: 'dd MMM yyyy' }}</p>
+            <p>{{ member.created | date : "dd MMM yyyy" }}</p>
           </div>
         </div>
         <div class="card-footer">
           <div class="btn-group d-flex">
             <button class="btn btn-secondary w-50">Like</button>
-            <button class="btn btn-secondary w-50" (click)="selectTab('Messages')">Message</button>
+            <button
+              class="btn btn-secondary w-50"
+              (click)="selectTab('Messages')"
+            >
+              Message
+            </button>
           </div>
         </div>
       </div>
@@ -44,26 +56,45 @@
       <!-- tabset component -->
       <tabset class="member-tabset" #memberTabs>
         <!-- tabs -->
-        <tab heading="About {{ member.knownAs }}" (selectTab)="onTabActivated($event)" class="tab-heading mt-2">
+        <tab
+          heading="About {{ member.knownAs }}"
+          (selectTab)="onTabActivated($event)"
+          class="tab-heading mt-2"
+        >
           <h4 class="text-dark">Description</h4>
           <p>{{ member.introduction }}</p>
           <h4 class="text-dark">Looking for</h4>
           <p>{{ member.lookingFor }}</p>
         </tab>
-        <tab heading="Interests" class="mt-2" (selectTab)="onTabActivated($event)">
+        <tab
+          heading="Interests"
+          class="mt-2"
+          (selectTab)="onTabActivated($event)"
+        >
           <h4 class="text-dark">Interests</h4>
           <p>{{ member.interests }}</p>
         </tab>
         <!-- execute gallery component when tab is active -->
-        <tab heading="Photos" #photoTab="tab" class="mt-2" (selectTab)="onTabActivated($event)">
+        <tab
+          heading="Photos"
+          #photoTab="tab"
+          class="mt-2"
+          (selectTab)="onTabActivated($event)"
+        >
           <gallery
             *ngIf="photoTab.active"
             [items]="images"
             class="gallery"
           ></gallery>
         </tab>
-        <tab heading="Messages" class="mt-2" (selectTab)="onTabActivated($event)">
-          <app-member-messages [username]="member.userName" [messages]="messages"></app-member-messages>
+        <tab
+          heading="Messages"
+          class="mt-2"
+          (selectTab)="onTabActivated($event)"
+        >
+          <app-member-messages
+            [username]="member.userName"
+          ></app-member-messages>
         </tab>
       </tabset>
     </div>

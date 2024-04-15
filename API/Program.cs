@@ -3,6 +3,7 @@ using API.Data;
 using API.Entities;
 using API.Extensions;
 using API.Middleware;
+using API.SignalR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,6 +31,9 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.MapHub<PresenceHub>("hubs/presence"); //SignalR endpoint
+app.MapHub<MessageHub>("hubs/message"); //SignalR endpoint
+
 //seeding data to database
 using var scope = app.Services.CreateScope(); //create scope for services
 var services = scope.ServiceProvider; //gather 
@@ -39,6 +43,7 @@ try
   var userManager = services.GetRequiredService<UserManager<AppUser>>();
   var roleManager = services.GetRequiredService<RoleManager<AppRole>>();
   await context.Database.MigrateAsync(); //create migration by code if not db yet
+  await context.Database.ExecuteSqlRawAsync("DELETE FROM [Connections]"); //clear out message hub tracking table
   await Seed.SeedUsers(userManager, roleManager); 
 }
 catch (Exception ex)

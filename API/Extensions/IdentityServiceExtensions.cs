@@ -28,6 +28,22 @@ namespace API.Extensions
           ValidateIssuer = false,
           ValidateAudience = false
         };
+
+        //config SignalR authentication
+        options.Events = new JwtBearerEvents
+        {
+          OnMessageReceived = context =>
+          {
+            var accessToken = context.Request.Query["access_token"]; //SignalR predefined
+
+            var path = context.HttpContext.Request.Path;
+            if(!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs"))
+            {
+              context.Token = accessToken; // pass the access token to session
+            }
+            return Task.CompletedTask;
+          }
+        };
       });
 
       services.AddAuthorization(opt => {

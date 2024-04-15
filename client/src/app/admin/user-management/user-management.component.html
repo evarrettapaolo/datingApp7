@@ -1,23 +1,25 @@
 <div class="row">
   <!-- table -->
-  <table class="table table-light">
-    <thead>
-      <tr>
-        <th class="ps-3">Username</th>
-        <th>Active roles</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let user of users">
-        <td>{{ user.username }}</td>
-        <td>{{ user.roles }}</td>
-        <td>
-          <button class="btn btn-info" (click)="openRolesModal(user)">
-            Edit Roles
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="container mt-3">
+    <table class="table table-light table-hover">
+      <thead style="height: 55px;" class="rounded-top-2">
+        <tr>
+          <th style="width: 30%;"  class="ps-4 align-middle">Username</th>
+          <th style="width: 40%;" class="align-middle">Active roles</th>
+          <th style="width: 30%;" class="align-middle"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td class="ps-4 align-middle">{{ user.username }}</td>
+          <td class="align-middle">{{ user.roles }}</td>
+          <td>
+            <button class="btn btn-info align-middle" (click)="openRolesModal(user)">
+              Edit Roles
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

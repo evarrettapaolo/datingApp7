@@ -35,7 +35,10 @@
   <!-- card body -->
   <div class="card-body rounded-bottom-2 p-1 bg-secondary">
     <h6 class="card-title text-center mb-1">
-      <i class="fa fa-user me-2"></i>
+      <!-- online icon indicator -->
+      <span  [class.is-online]="(presenceService.onlineUsers$ | async)?.includes(member.userName)">
+        <i class="fa fa-user me-2"></i>
+      </span>
       {{ member.knownAs }}, {{ member.age }}
     </h6>
     <p class="card-text text-muted text-center">{{ member.city }}</p>
