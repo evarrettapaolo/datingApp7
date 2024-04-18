@@ -34,7 +34,7 @@
     </div>
 
     <!-- login form -->
-    <form class="d-flex ms-3" *ngIf="!(accountService.currentUser$ | async)" #loginForm="ngForm" (ngSubmit)="login(loginForm)" autocomplete="off">
+    <form class="d-flex ms-3" *ngIf="!(accountService.currentUser$ | async)" #loginForm="ngForm" (ngSubmit)="login()" autocomplete="off">
       <input 
         name="username"
         [(ngModel)]="model.username"

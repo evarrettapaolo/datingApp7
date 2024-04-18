@@ -6,8 +6,14 @@
       No messages yet... say hi by using the message box below
     </div>
     <!-- message thread -->
-    <ul *ngIf="(messageService.messageThread$ | async)!.length > 0" class="chat">
-      <li *ngFor="let message of (messageService.messageThread$ | async)">
+    <ul
+      #scrollMe
+      style="overflow-y: scroll; height: 400px;"
+      [scrollTop]="scrollMe.scrollHeight"
+      *ngIf="(messageService.messageThread$ | async)!.length > 0"
+      class="chat"
+    >
+      <li *ngFor="let message of messageService.messageThread$ | async">
         <div>
           <!-- user image -->
           <span class="chat-image float-end">
@@ -27,13 +33,18 @@
                 <!-- not read notification -->
                 <span
                   class="text-danger"
-                  *ngIf="!message.dateRead && message.senderUsername !== username"
-                  > (unread)
+                  *ngIf="
+                    !message.dateRead && message.senderUsername !== username
+                  "
+                >
+                  (unread)
                 </span>
                 <!-- read notification -->
                 <span
                   class="text-success"
-                  *ngIf="message.dateRead && message.senderUsername !== username"
+                  *ngIf="
+                    message.dateRead && message.senderUsername !== username
+                  "
                 >
                   (read {{ message.dateRead | timeago }})
                 </span>
@@ -58,7 +69,13 @@
           class="form-control input-sm"
           placeholder="Send a private message"
         />
-        <button [disabled]="!messageForm.valid" class="btn btn-primary" type="submit">Send</button>
+        <button
+          [disabled]="!messageForm.valid"
+          class="btn btn-primary"
+          type="submit"
+        >
+          Send
+        </button>
       </div>
     </form>
   </div>

@@ -3,9 +3,7 @@ import { AccountService } from '../_services/account.service';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { MembersService } from '../_services/members.service';
 import { UserParams } from '../_models/userParams';
-import { Member } from '../_models/member';
 
 @Component({
   selector: 'app-nav',
@@ -23,11 +21,11 @@ export class NavComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  login(form: NgForm) {
+  login() {
     this.accountService.login(this.model).subscribe({
       next: () => {
         this.router.navigateByUrl('/members');
-        form.reset();
+        this.model = {}; //clears out the fields
       },
       error: () => {
         this.toastr.error('invalid login');

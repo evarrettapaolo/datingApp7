@@ -14,13 +14,13 @@ namespace API.Helpers
       //get current username
       var userId = resultContext.HttpContext.User.GetUserId();
       //get userRepo service
-      var repo = resultContext.HttpContext.RequestServices.GetRequiredService<IUserRepository>();
+      var uow = resultContext.HttpContext.RequestServices.GetRequiredService<IUnitOfWork>();
       //get user object
-      var user = await repo.GetUserByIdAsync(userId);
+      var user = await uow.UserRepository.GetUserByIdAsync(userId);
       //update property
       user.LastActive = DateTime.UtcNow;
       //save
-      await repo.SaveAllAsync();
+      await uow.Complete();
     }
   }
 }
