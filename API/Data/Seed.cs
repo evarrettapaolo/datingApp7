@@ -33,6 +33,10 @@ namespace API.Data
       foreach (var user in users)
       {
         user.UserName = user.UserName.ToLower();
+        if (user.Photos.Count > 0)
+        {
+          user.Photos[0].IsApproved = true;
+        }
         await userManager.CreateAsync(user, "Pa$$w0rd"); //create and save changes to db
         await userManager.AddToRoleAsync(user, "Member");
       }

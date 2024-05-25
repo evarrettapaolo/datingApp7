@@ -1,1 +1,28 @@
-<p>photo-management works!</p>
+<!-- unapproved photos -->
+<div class="row" *ngIf="photos">
+  <div *ngFor="let photo of photos" class="mt-3 col-3 col-lg-2">
+    <h5 class="mb-1 text-center text-capitalize text-dark">
+      {{ photo.username }}
+    </h5>
+    <img
+      src="{{ photo.url }}"
+      alt="photo of user"
+      class="img-thumbnail mb-2 mx-auto d-block shadow"
+    />
+    <!-- buttons -->
+    <div class="d-flex">
+      <button
+        class="btn btn-sm btn-outline-dark w-50 me-1"
+        (click)="approvePhoto(photo.id)"
+      >
+        Approve
+      </button>
+      <button
+        class="btn btn-sm btn-outline-danger w-50"
+        (click)="rejectPhoto(photo.id)"
+      >
+        Reject
+      </button>
+    </div>
+  </div>
+</div>

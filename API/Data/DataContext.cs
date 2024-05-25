@@ -5,8 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API;
 
-public class DataContext : IdentityDbContext<AppUser, AppRole, int, 
-IdentityUserClaim<int>, AppUserRole, IdentityUserLogin<int>, 
+public class DataContext : IdentityDbContext<AppUser, AppRole, int,
+IdentityUserClaim<int>, AppUserRole, IdentityUserLogin<int>,
 IdentityRoleClaim<int>, IdentityUserToken<int>>
 {
   public DataContext(DbContextOptions<DataContext> options) : base(options)
@@ -17,6 +17,7 @@ IdentityRoleClaim<int>, IdentityUserToken<int>>
   public DbSet<Message> Messages { get; set; }
   public DbSet<Group> Groups { get; set; }
   public DbSet<Connection> Connections { get; set; }
+  public DbSet<Photo> Photos { get; set; }
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {
@@ -64,6 +65,8 @@ IdentityRoleClaim<int>, IdentityUserToken<int>>
       .HasOne(u => u.Sender)
       .WithMany(m => m.MessagesSent)
       .OnDelete(DeleteBehavior.Restrict);
+
+    modelBuilder.Entity<Photo>().HasQueryFilter(p => p.IsApproved);
   }
 
 }

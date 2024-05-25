@@ -50,7 +50,8 @@ public class UsersController : BaseApiController
   [HttpGet("{username}")]
   public async Task<ActionResult<MemberDto>> GetUser(string username)
   {
-    return Ok(await _uow.UserRepository.GetMemberAsync(username));
+      bool currentUserEquality = username.Equals(User.GetUsername());
+      return Ok(await _uow.UserRepository.GetMemberAsync(username, currentUserEquality));
   }
 
   [HttpPut]
@@ -90,7 +91,7 @@ public class UsersController : BaseApiController
       PublicId = result.PublicId
     };
 
-    if (user.Photos.Count == 0) photo.IsMain = true; //set main if it is first photo
+    // if (user.Photos.Count == 0) photo.IsMain = true; //set main if it is first photo, disabled if approval is required
 
     user.Photos.Add(photo); //append
 
@@ -107,7 +108,7 @@ public class UsersController : BaseApiController
   public async Task<ActionResult> SetMainPhoto(int photoId)
   {
     //get current user
-    var user = await _uow.UserRepository.GetUserByUsernameAsync(User.GetUsername());
+    var user = await _uow.UserRepository.GetUserByUsernameUnfilteredAsync(User.GetUsername());
 
     if (user == null) return NotFound(); //user not found
 
@@ -117,6 +118,8 @@ public class UsersController : BaseApiController
     if (photo == null) return NotFound(); //photo not found
 
     if (photo.IsMain) return BadRequest("this is already you main photo"); //already main
+
+    if(photo.IsApproved == false) return BadRequest("Cannot set unapproved photo as main"); //unapproved photo
 
     //get the current photo
     var currentMain = user.Photos.FirstOrDefault(x => x.IsMain);
@@ -133,10 +136,11 @@ public class UsersController : BaseApiController
   [HttpDelete("delete-photo/{photoId}")]
   public async Task<ActionResult> DeletePhoto(int photoId)
   {
-    //null is not possible, since this controller requires authentication
-    var user = await _uow.UserRepository.GetUserByUsernameAsync(User.GetUsername());
+    //Query filter is disabled on GetUserByUsernameAsync()
+    var user = await _uow.UserRepository.GetUserByUsernameUnfilteredAsync(User.GetUsername());
 
     var photo = user.Photos.FirstOrDefault(x => x.Id == photoId);  //store matching photo
+    // var photo = _uow.PhotoRepository.GetPhotoById(photoId);
 
     if (photo == null) return NotFound(); //photo not found
 
