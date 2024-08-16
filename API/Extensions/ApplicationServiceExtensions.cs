@@ -12,10 +12,7 @@ namespace API.Extensions
   {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration config)
     {
-      services.AddDbContext<DataContext>(options =>
-      {
-        options.UseSqlite(config.GetConnectionString("DefaultConnection"));
-      });
+      services.AddControllers();
 
       services.AddCors(options =>
       {
@@ -24,10 +21,10 @@ namespace API.Extensions
           policy.AllowAnyHeader()
           .AllowAnyMethod()
           .AllowCredentials() //Allows SignalR
-          .WithOrigins("https://localhost:4200");
+          .WithOrigins("http://localhost:4200", "https://localhost:4200");
         });
       });
-      
+
       services.AddScoped<ITokenService, TokenService>();
       services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
       services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));

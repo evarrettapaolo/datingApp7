@@ -1,3 +1,4 @@
+using System.Data;
 using System.Text.Json;
 using API.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -7,6 +8,12 @@ namespace API.Data
 {
   public class Seed
   {
+    public static async Task ClearConnections(DataContext context)
+    {
+      context.Connections.RemoveRange(context.Connections);
+      await context.SaveChangesAsync();
+    }
+
     public static async Task SeedUsers(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager)
     {
       //check if there are entries in database
@@ -33,6 +40,9 @@ namespace API.Data
       foreach (var user in users)
       {
         user.UserName = user.UserName.ToLower();
+        //Insists to use UTC, which Postgres req
+        user.Created = DateTime.SpecifyKind(user.Created, DateTimeKind.Utc); 
+        user.LastActive = DateTime.SpecifyKind(user.LastActive, DateTimeKind.Utc);
         if (user.Photos.Count > 0)
         {
           user.Photos[0].IsApproved = true;
